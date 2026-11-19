@@ -39,6 +39,34 @@ namespace MihailenkoMiracleShoes
                 return string.Join(", ", StockItem.Select(s => $"{s.Size.Size1.ToString("0.#").Replace(",", ".")} ({s.AvailableQuantity} шт.)"));
             }
         }
+
+
+        // Общее количество пар по всем размерам
+        public int TotalQuantity
+        {
+            get
+            {
+                return StockItem?.Sum(s => s.AvailableQuantity) ?? 0;
+            }
+        }
+
+        // Статус наличия товара
+        public string StockStatus
+        {
+            get
+            {
+                return TotalQuantity > 5 ? "много" : "мало";
+            }
+        }
+
+        public bool IsLowStock
+        {
+            get
+            {
+                return TotalQuantity <= 3;
+            }
+        }
+
         public string ProductPhotoPath
         {
             get

@@ -8,7 +8,7 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="ShoesPage" FontFamily="Calibri">
 
-    <Grid>
+    <Grid MinHeight="145">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition Height="auto"></RowDefinition>
@@ -57,54 +57,115 @@
 
 
 
-        <ListView Name="ProductListView" Grid.Row="2" ContextMenuOpening="ProductListView_ContextMenuOpening">
+        <ListView Name="ProductListView" Grid.Row="2" ContextMenuOpening="ProductListView_ContextMenuOpening" HorizontalContentAlignment="Stretch">
             <ListView.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Добавить к заказу" Click="MenuItem_Click"></MenuItem>
                 </ContextMenu>
             </ListView.ContextMenu>
+
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="30"/>
-                            <RowDefinition Height="27"/>
-                            <RowDefinition Height="27"/>
-                            <RowDefinition Height="27"/>
-                            <RowDefinition Height="27"/>
-                        </Grid.RowDefinitions>
-                        <Image Width="155" Height="165" Grid.Column="0" Grid.RowSpan="6" Stretch="UniformToFill" HorizontalAlignment="Center">
-                            <Image.Source>
-                                <Binding Path="ProductPhotoPath">
-                                    <Binding.TargetNullValue>
-                                        <ImageSource>
-                                            res/picture.png
-                                        </ImageSource>
-                                    </Binding.TargetNullValue>
-                                </Binding>
-                            </Image.Source>
-                        </Image>
+                    <Border BorderBrush="Black"
+                        BorderThickness="1"
+                        Margin="3"
+                        Padding="5"
+                        CornerRadius="3">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="Background" Value="White"/>
 
-                        <Grid Grid.Column="1" Grid.Row="0" Margin="5,0,0,0">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsLowStock}" Value="True">
+                                        <Setter Property="Background" Value="#FCE4E4"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                        <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="155"/>
                                 <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="190"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" FontSize="20" FontWeight="Bold"><Run Text="{Binding ID_Product, Mode=OneWay}"/><Run Text=". "/></TextBlock>
-                            <TextBlock Grid.Column="1" Text="{Binding ProductName}" FontSize="20" FontWeight="Bold" TextWrapping="Wrap"></TextBlock>
-                        </Grid>
 
-                        <TextBlock Text="{Binding Category.CategoryName, StringFormat={}Категория: {0} }" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" FontSize="17" Margin="5,0,0,0"></TextBlock>
-                        <TextBlock Text="{Binding Subcategory.SubcategoryName,StringFormat={}Подкатегория: {0} }" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Left" FontSize="17" Margin="5,0,0,0"></TextBlock>
-                        <TextBlock Text="{Binding Manufacturer.ManufacturerName,StringFormat={}Производство: {0} }" Grid.Column="1" Grid.Row="3" HorizontalAlignment="Left" FontSize="17" Margin="5,0,0,0"></TextBlock>
-                        <TextBlock Text="{Binding Price, StringFormat={}Цена: {0} рублей}" Grid.Column="1" Grid.Row="5" HorizontalAlignment="Left" FontSize="27" Margin="5,0,0,0"></TextBlock>
-                    </Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="30"/>
+                                <RowDefinition Height="27"/>
+                                <RowDefinition Height="27"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <!-- Изображение товара -->
+                            <Image Width="130"
+                       Height="110"
+                       Grid.Column="0"
+                       Grid.RowSpan="5"
+                       Stretch="Uniform"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center">
+                                <Image.Source>
+                                    <Binding Path="ProductPhotoPath">
+                                        <Binding.TargetNullValue>
+                                            <ImageSource>
+                                                res/picture.png
+                                            </ImageSource>
+                                        </Binding.TargetNullValue>
+                                    </Binding>
+                                </Image.Source>
+                            </Image>
+
+                            <!-- Производитель и наименование -->
+                            <TextBlock Grid.Column="1"
+                           Grid.Row="0"
+                           FontSize="20"
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center"
+                           Margin="5,0,0,0">
+                    <Run Text="{Binding Manufacturer.ManufacturerName}"/>
+                    <Run Text=" | "/>
+                    <Run Text="{Binding ProductName}"/>
+                            </TextBlock>
+
+                            <!-- Категория -->
+                            <TextBlock Text="{Binding Category.CategoryName, StringFormat={}Категория: {0}}"
+                           Grid.Column="1"
+                           Grid.Row="1"
+                           HorizontalAlignment="Left"
+                           FontSize="17"
+                           Margin="5,0,0,0"/>
+
+                            <!-- Количество -->
+                            <TextBlock Text="{Binding StockStatus, StringFormat={}Количество: {0}}"
+                           Grid.Column="1"
+                           Grid.Row="2"
+                           HorizontalAlignment="Left"
+                           FontSize="17"
+                           Margin="5,0,0,0"/>
+
+                            <TextBlock Text="{Binding Composition, StringFormat={}Состав: {0}}"
+                               HorizontalAlignment="Left"
+                               FontSize="17"
+                               Grid.Row="3"
+                               Grid.Column="1"
+                               Margin="5,0,5,5"
+                               TextWrapping="Wrap"
+                               VerticalAlignment="Top"/>
+
+                            <TextBlock Text="{Binding Price, StringFormat={}{0:N2} ₽}"
+                               Grid.Column="2"
+                               Grid.Row="1"
+                               Grid.RowSpan="3"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               FontSize="27"
+                               Margin="0,0,25,0"/>
+
+                        </Grid>
+                    </Border>
                 </DataTemplate>
             </ListView.ItemTemplate>
+
         </ListView>
         <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Left" Margin="5">
             <Button Width="130" Content="Все заказы" Name="AllOrdersBtn" Click="AllOrdersBtn_Click" Visibility="Collapsed"></Button>

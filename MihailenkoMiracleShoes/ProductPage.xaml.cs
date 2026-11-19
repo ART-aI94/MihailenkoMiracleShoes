@@ -61,46 +61,62 @@ namespace MihailenkoMiracleShoes
                 }
             }
 
-            ProductListView.ItemsSource = currentProducts;
-
             SortComboBox.SelectedIndex = 0;
             FilterComboBox.SelectedIndex = 0;
+
             UpdateProducts();
         }
+
         public void UpdateProducts()
         {
-            var currentProducts = MihailenkoMiracleShoesEntities.GetContext().Product.ToList();
+            var currentProducts = MihailenkoMiracleShoesEntities.GetContext().Product
+                .Include(p => p.Category)
+                .Include(p => p.Manufacturer)
+                .Include(p => p.StockItem.Select(s => s.Size))
+                .ToList();
 
-            // фильтрация
+            // Фильтрация
             if (FilterComboBox.SelectedIndex == 1)
             {
-                currentProducts = currentProducts.Where(c => c.Category.CategoryName == "Детская обувь").ToList();
+                currentProducts = currentProducts
+                    .Where(p => p.Category.CategoryName == "Детская обувь").ToList();
             }
-            if (FilterComboBox.SelectedIndex == 2)
+            else if (FilterComboBox.SelectedIndex == 2)
             {
-                currentProducts = currentProducts.Where(c => c.Category.CategoryName == "Женская обувь").ToList();
+                currentProducts = currentProducts
+                    .Where(p => p.Category.CategoryName == "Женская обувь").ToList();
             }
-            if (FilterComboBox.SelectedIndex == 3)
+            else if (FilterComboBox.SelectedIndex == 3)
             {
-                currentProducts = currentProducts.Where(c => c.Category.CategoryName == "Мужская обувь").ToList();
+                currentProducts = currentProducts
+                    .Where(p => p.Category.CategoryName == "Мужская обувь").ToList();
             }
 
-            // поиск
-            currentProducts = currentProducts.Where(p => p.ProductName.ToLower().Contains(SearchTextBox.Text.ToLower())).ToList();
+            // Поиск
+            string searchText = SearchTextBox.Text.ToLower().Trim();
 
-            // сортировка
+            if (!string.IsNullOrWhiteSpace(searchText))
+            {
+                currentProducts = currentProducts
+                    .Where(p => (p.ProductName ?? "").ToLower().Contains(searchText))
+                    .ToList();
+            }
+
+            // Сортировка
             if (SortComboBox.SelectedIndex == 1)
             {
                 currentProducts = currentProducts.OrderByDescending(p => p.Price).ToList();
             }
-            if (SortComboBox.SelectedIndex == 2)
+            else if (SortComboBox.SelectedIndex == 2)
             {
                 currentProducts = currentProducts.OrderBy(p => p.Price).ToList();
             }
-            ProductListView.ItemsSource = currentProducts.ToList();
+
+            ProductListView.ItemsSource = currentProducts;
 
             UpdateShopBasketButtonVisibility();
         }
+
 
         private void AddToOrder(StockItem stockItem)
         {
