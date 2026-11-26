@@ -48,6 +48,22 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <Button Content="Удалить" Name="DeleteOrderBtn" Grid.Row="4" HorizontalAlignment="Left" Click="DeleteOrderBtn_Click"></Button>
+        <StackPanel Grid.Row="3"
+            Orientation="Horizontal"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Center"
+            Margin="5">
+
+            <Button Content="Удалить"
+            Name="DeleteOrderBtn"
+            Margin="0,0,10,0"
+            Click="DeleteOrderBtn_Click"/>
+
+            <Button Content="Редактировать"
+            Name="EditOrderBtn"
+            Click="EditOrderBtn_Click"
+            Visibility="Collapsed"/>
+
+        </StackPanel>
     </Grid>
 </Page>

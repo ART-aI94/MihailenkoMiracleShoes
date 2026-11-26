@@ -29,6 +29,17 @@ namespace MihailenkoMiracleShoes
             InitializeComponent();
             _orderId = orderId;
             _currentUser = user;
+            bool isAdmin = _currentUser != null &&
+               _currentUser.Role.Role1 == "Администратор";
+
+
+            if (isAdmin)
+            {
+                OrderDateTB.Visibility = Visibility.Collapsed;
+                OrderDatePicker.Visibility = Visibility.Visible;
+                SaveDateBtn.Visibility = Visibility.Visible;
+            }
+
 
             var context = MihailenkoMiracleShoesEntities.GetContext();
 
@@ -38,6 +49,7 @@ namespace MihailenkoMiracleShoes
             {
                 OrderNumberTB.Text = order.OrderNumber.ToString();
                 OrderDateTB.Text = order.OrderDate.ToString("dd.MM.yyyy");
+                OrderDatePicker.SelectedDate = order.OrderDate.Date;
                 ClientNameTB.Text = $"{order.User.Surname} {order.User.Name} {order.User.Patronymic}";
             }
 
@@ -64,6 +76,40 @@ namespace MihailenkoMiracleShoes
             }
         }
 
+        private void SaveDateBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (_currentUser == null ||
+                _currentUser.Role.Role1 != "Администратор")
+            {
+                MessageBox.Show("Изменять дату может только администратор!");
+                return;
+            }
+
+            if (OrderDatePicker.SelectedDate == null)
+            {
+                MessageBox.Show("Выберите дату!");
+                return;
+            }
+
+            var context = MihailenkoMiracleShoesEntities.GetContext();
+
+            var order = context.Order
+                .FirstOrDefault(o => o.ID_Order == _orderId);
+
+            if (order == null)
+            {
+                MessageBox.Show("Заказ не найден!");
+                return;
+            }
+
+            order.OrderDate = OrderDatePicker.SelectedDate.Value.Date;
+
+            context.SaveChanges();
+
+            OrderDateTB.Text = order.OrderDate.ToString("dd.MM.yyyy");
+
+            MessageBox.Show("Дата заказа изменена!");
+        }
         private void AddCountBtn_Click(object sender, RoutedEventArgs e)
         {
             if (_currentUser == null || _currentUser.Role.Role1 != "Администратор")

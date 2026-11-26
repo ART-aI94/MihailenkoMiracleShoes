@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Data.Entity;
 
 namespace MihailenkoMiracleShoes
 {
@@ -21,6 +22,7 @@ namespace MihailenkoMiracleShoes
     {
         private List<OrderItem> _items;
         private User _user;
+        private bool _isStaff;
         public OrderWindow(List<OrderItem> items, User user)
         {
             InitializeComponent();
@@ -41,8 +43,35 @@ namespace MihailenkoMiracleShoes
             int newNumber = (context.Order.Max(o => (int?)o.OrderNumber) ?? 0) + 1;
 
             OrderDateTB.Text = DateTime.Now.ToString("dd.MM.yyyy");
-            UserNameTB.Text = $"{user.Surname} {user.Name} {user.Patronymic}";
             OrderNumberTB.Text = newNumber.ToString();
+
+            _isStaff = user.Role.Role1 == "Менеджер" ||
+                       user.Role.Role1 == "Администратор";
+
+            if (_isStaff)
+            {
+                var customers = context.User
+                    .Include(u => u.Role)
+                    .Where(u => u.Role.Role1 != "Менеджер" &&
+                                u.Role.Role1 != "Администратор")
+                    .Select(u => new
+                    {
+                        u.ID_User,
+                        FullName = u.Surname + " " + u.Name + " " + u.Patronymic
+                    })
+                    .ToList();
+
+                CustomerComboBox.ItemsSource = customers;
+                CustomerComboBox.Visibility = Visibility.Visible;
+                UserNameTB.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                UserNameTB.Text =
+                    $"{user.Surname} {user.Name} {user.Patronymic}";
+
+                CustomerComboBox.Visibility = Visibility.Collapsed;
+            }
             TotalTB.Text = _items.Sum(i => i.StockItem.Product.Price * i.Quantity).ToString("0.00") + " руб.";
 
             ItemsListView.ItemsSource = _items;
@@ -53,13 +82,30 @@ namespace MihailenkoMiracleShoes
         {
             var context = MihailenkoMiracleShoesEntities.GetContext();
 
+            int customerId;
+
+            if (_isStaff)
+            {
+                if (CustomerComboBox.SelectedValue == null)
+                {
+                    MessageBox.Show("Выберите покупателя!");
+                    return;
+                }
+
+                customerId = (int)CustomerComboBox.SelectedValue;
+            }
+            else
+            {
+                customerId = _user.ID_User;
+            }
+
             int newNumber = (context.Order.Max(o => (int?)o.OrderNumber) ?? 0) + 1;
 
             var order = new Order
             {
                 OrderNumber = newNumber,
                 OrderDate = DateTime.Now,
-                ID_User = _user.ID_User
+                ID_User = customerId
             };
 
             context.Order.Add(order);

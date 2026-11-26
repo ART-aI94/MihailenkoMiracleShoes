@@ -8,7 +8,7 @@
         Title="OrderWindow" Height="450" Width="800">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="120"/>
+            <RowDefinition Height="130"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
@@ -20,7 +20,7 @@
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="30"/>
-                <RowDefinition Height="30"/>
+                <RowDefinition Height="40"/>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
             </Grid.RowDefinitions>
@@ -31,7 +31,17 @@
             <TextBlock Grid.Row="3" Grid.Column="0" Text="Итого:" FontSize="17" Margin="5" FontWeight="Bold"/>
 
             <TextBlock Grid.Row="0" Grid.Column="1" Name="OrderDateTB" FontSize="17" Margin="5"/>
-            <TextBlock Grid.Row="1" Grid.Column="1" Name="UserNameTB" FontSize="17" Margin="5"/>
+            <TextBlock Grid.Row="1" Grid.Column="1"
+               Name="UserNameTB"
+               FontSize="17"
+               Margin="5"/>
+            <ComboBox Grid.Row="1" Grid.Column="1"
+              Name="CustomerComboBox"
+              FontSize="17"
+              Margin="5"
+              DisplayMemberPath="FullName"
+              SelectedValuePath="ID_User"
+              Visibility="Collapsed"/>
             <TextBlock Grid.Row="2" Grid.Column="1" Name="OrderNumberTB" FontSize="17" Margin="5"/>
             <TextBlock Grid.Row="3" Grid.Column="1" Name="TotalTB" FontSize="17" Margin="5" FontWeight="Bold"/>
         </Grid>
@@ -46,7 +56,6 @@
                             <ColumnDefinition Width="80"/>
                             <ColumnDefinition Width="90"/>
                             <ColumnDefinition Width="50"/>
-                            <ColumnDefinition Width="110"/>
                             <ColumnDefinition Width="50"/>
                             <ColumnDefinition Width="200"/>
                         </Grid.ColumnDefinitions>
@@ -57,10 +66,9 @@
                         <TextBlock Grid.Column="3" Text="{Binding StockItem.Product.Price, StringFormat={}{0} руб.}" FontWeight="DemiBold" FontSize="15" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0"/>
                         <Button Grid.Column="4" Content="+" Name="AddQuantityBtn" Width="30" HorizontalAlignment="Center" VerticalAlignment="Center"
                                 Click="AddQuantityBtn_Click"></Button>
-                        <TextBlock Grid.Column="5" Text="Изменить кол-во" FontSize="15" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        <Button Grid.Column="6" Content="-" Name="DeleteQuantityBtn" Width="30" HorizontalAlignment="Center" VerticalAlignment="Center"
+                        <Button Grid.Column="5" Content="-" Name="DeleteQuantityBtn" Width="30" HorizontalAlignment="Center" VerticalAlignment="Center"
                                 Click="DeleteQuantityBtn_Click"></Button>
-                        <Button Grid.Column="7" Content="Удалить" Name="DeleteOrderBtn" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                        <Button Grid.Column="6" Content="Удалить" Name="DeleteOrderBtn" HorizontalAlignment="Center" VerticalAlignment="Center" 
                                 Click="DeleteOrderBtn_Click"></Button>
                     </Grid>
                 </DataTemplate>

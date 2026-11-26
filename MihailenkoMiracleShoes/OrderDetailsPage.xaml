@@ -11,7 +11,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
-            <RowDefinition Height="90"/>
+            <RowDefinition Height="110"/>
             <RowDefinition Height="45"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="45"/>
@@ -21,18 +21,39 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="200"/>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="170"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
             </Grid.RowDefinitions>
             <TextBlock Text="Номер Заказа: " Grid.Row="0" FontSize="15" HorizontalAlignment="Left" Margin="5"></TextBlock>
             <TextBlock Text="Дата Заказа: " Grid.Row="1" FontSize="15" HorizontalAlignment="Left" Margin="5"></TextBlock>
             <TextBlock Text="Клиент: " Grid.Row="2" FontSize="15" HorizontalAlignment="Left" Margin="5"></TextBlock>
 
             <TextBlock Name="OrderNumberTB" Grid.Column="1" Grid.Row="0" FontSize="15" HorizontalAlignment="Left" Margin="5"></TextBlock>
-            <TextBlock Name="OrderDateTB" Grid.Column="1" Grid.Row="1" FontSize="15" HorizontalAlignment="Left" Margin="5"></TextBlock>
+            <TextBlock Name="OrderDateTB"
+           Grid.Column="1"
+           Grid.Row="1"
+           FontSize="15"
+           HorizontalAlignment="Left"
+           Margin="5"/>
+
+            <DatePicker Name="OrderDatePicker"
+            Grid.Column="1"
+            Grid.Row="1"
+            Width="150"
+            HorizontalAlignment="Left"
+            Margin="5"
+            Visibility="Collapsed"/>
+
+            <Button Name="SaveDateBtn"
+        Content="Сохранить"
+        Grid.Column="2"
+        Grid.Row="1"
+        Click="SaveDateBtn_Click"
+        Visibility="Collapsed"/>
             <TextBlock Name="ClientNameTB" Grid.Column="1" Grid.Row="2" FontSize="15" HorizontalAlignment="Left" Margin="5"></TextBlock>
         </Grid>
         <Grid Grid.Row="2">
@@ -70,9 +91,9 @@
                         <TextBlock Text="{Binding Quantity}" Grid.Column="2" FontSize="17" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
                         <TextBlock Text="{Binding StockItem.Product.Price, StringFormat={}{0} руб.}" Grid.Column="3" FontSize="17" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
                         <TextBlock Text="{Binding TotalPrice, StringFormat={}{0} руб.}" Grid.Column="4" FontSize="17" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
-                        <Button Content="+" Name="AddCountBtn" Grid.Column="5" HorizontalAlignment="Center" VerticalAlignment="Center" Height="30" Width="30" Click="AddCountBtn_Click"></Button>
-                        <Button Content="-" Name="SubtractCountBtn" Grid.Column="7" HorizontalAlignment="Center" VerticalAlignment="Center" Height="30" Width="30" Click="SubtractCountBtn_Click"></Button>
-                        <Button Background="#70B2AF" Width="110" Content="Удалить" Name="DeleteBtn" Grid.Column="8" HorizontalAlignment="Center" VerticalAlignment="Center" Click="DeleteBtn_Click"></Button>
+                        <Button Content="+" Name="AddCountBtn" Grid.Column="5" HorizontalAlignment="Center" VerticalAlignment="Center" Height="30" Width="30" Click="AddCountBtn_Click" ></Button>
+                        <Button Content="-" Name="SubtractCountBtn" Grid.Column="6" HorizontalAlignment="Center" VerticalAlignment="Center" Height="30" Width="30" Click="SubtractCountBtn_Click" ></Button>
+                        <Button Background="#70B2AF" Width="110" Content="Удалить" Name="DeleteBtn" Grid.Column="8" HorizontalAlignment="Center" VerticalAlignment="Center" Click="DeleteBtn_Click" ></Button>
 
                     </Grid>
                 </DataTemplate>

@@ -90,7 +90,7 @@
                             </Grid.ColumnDefinitions>
 
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="30"/>
+                                <RowDefinition Height="auto"/>
                                 <RowDefinition Height="27"/>
                                 <RowDefinition Height="27"/>
                                 <RowDefinition Height="Auto"/>
@@ -118,7 +118,7 @@
                             <!-- Производитель и наименование -->
                             <TextBlock Grid.Column="1"
                            Grid.Row="0"
-                           FontSize="20"
+                           FontSize="17"
                            FontWeight="Bold"
                            HorizontalAlignment="Center"
                            Margin="5,0,0,0">

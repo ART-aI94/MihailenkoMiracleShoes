@@ -28,6 +28,12 @@ namespace MihailenkoMiracleShoes
 
             _currentUser = user;
 
+            if (_currentUser != null &&
+                _currentUser.Role.Role1 == "Администратор")
+            {
+                EditOrderBtn.Visibility = Visibility.Visible;
+            }
+
             var orders = MihailenkoMiracleShoesEntities.GetContext().Order
                 .Include(o => o.User)
                 .ToList();
@@ -54,6 +60,25 @@ namespace MihailenkoMiracleShoes
                     Manager.MainFrame.Navigate(new OrderDetailsPage(selectedOrder.ID_Order, _currentUser));
                 }
             }
+        }
+
+        private void EditOrderBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (_currentUser == null ||
+                _currentUser.Role.Role1 != "Администратор")
+            {
+                MessageBox.Show("Редактировать заказ может только администратор!");
+                return;
+            }
+
+            if (!(OrderListView.SelectedItem is Order selectedOrder))
+            {
+                MessageBox.Show("Выберите заказ!");
+                return;
+            }
+
+            Manager.MainFrame.Navigate(
+                new OrderDetailsPage(selectedOrder.ID_Order, _currentUser));
         }
 
         private void DeleteOrderBtn_Click(object sender, RoutedEventArgs e)

@@ -67,6 +67,16 @@ namespace MihailenkoMiracleShoes
             UpdateProducts();
         }
 
+        private string CleanText(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+                return text;
+
+            return string.Join(" ",
+                text.Split(new[] { ' ', '\r', '\n', '\t' },
+                StringSplitOptions.RemoveEmptyEntries));
+        }
+
         public void UpdateProducts()
         {
             var currentProducts = MihailenkoMiracleShoesEntities.GetContext().Product
@@ -75,21 +85,36 @@ namespace MihailenkoMiracleShoes
                 .Include(p => p.StockItem.Select(s => s.Size))
                 .ToList();
 
+            // Исправляем переносы в названиях
+            foreach (var p in currentProducts)
+            {
+                p.ProductName = CleanText(p.ProductName);
+
+                if (p.Manufacturer != null)
+                {
+                    p.Manufacturer.ManufacturerName =
+                        CleanText(p.Manufacturer.ManufacturerName);
+                }
+            }
+
             // Фильтрация
             if (FilterComboBox.SelectedIndex == 1)
             {
                 currentProducts = currentProducts
-                    .Where(p => p.Category.CategoryName == "Детская обувь").ToList();
+                    .Where(p => p.Category.CategoryName == "Детская обувь")
+                    .ToList();
             }
             else if (FilterComboBox.SelectedIndex == 2)
             {
                 currentProducts = currentProducts
-                    .Where(p => p.Category.CategoryName == "Женская обувь").ToList();
+                    .Where(p => p.Category.CategoryName == "Женская обувь")
+                    .ToList();
             }
             else if (FilterComboBox.SelectedIndex == 3)
             {
                 currentProducts = currentProducts
-                    .Where(p => p.Category.CategoryName == "Мужская обувь").ToList();
+                    .Where(p => p.Category.CategoryName == "Мужская обувь")
+                    .ToList();
             }
 
             // Поиск
@@ -98,18 +123,23 @@ namespace MihailenkoMiracleShoes
             if (!string.IsNullOrWhiteSpace(searchText))
             {
                 currentProducts = currentProducts
-                    .Where(p => (p.ProductName ?? "").ToLower().Contains(searchText))
+                    .Where(p => (p.ProductName ?? "")
+                    .ToLower().Contains(searchText))
                     .ToList();
             }
 
             // Сортировка
             if (SortComboBox.SelectedIndex == 1)
             {
-                currentProducts = currentProducts.OrderByDescending(p => p.Price).ToList();
+                currentProducts = currentProducts
+                    .OrderByDescending(p => p.Price)
+                    .ToList();
             }
             else if (SortComboBox.SelectedIndex == 2)
             {
-                currentProducts = currentProducts.OrderBy(p => p.Price).ToList();
+                currentProducts = currentProducts
+                    .OrderBy(p => p.Price)
+                    .ToList();
             }
 
             ProductListView.ItemsSource = currentProducts;
